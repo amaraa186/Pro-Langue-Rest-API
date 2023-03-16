@@ -8,7 +8,7 @@ var NewWordSchema = new Schema({
     ref: "Lesson",
   },
   foreign: String,
-  mongolia: [String],
+  mongolia: String,
   img: String,
   audio: String,
   created_at: {

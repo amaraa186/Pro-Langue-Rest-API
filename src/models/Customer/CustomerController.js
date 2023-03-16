@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Customer = require("./Customer");
-const _ = require('lodash')
+const _ = require("lodash");
 
 router.get("/:customer_id", (req, res) => {
   Customer.findById(req.params.customer_id, (err, customer) => {
@@ -15,19 +15,19 @@ router.get("/:customer_id", (req, res) => {
 
 router.post("/", (req, res) => {
   const email = req.body.email;
-  Customer.findOne({email: email}, (err, finded) => {
-    if(err) throw err
+  Customer.findOne({ email: email }, (err, finded) => {
+    if (err) throw err;
 
-    if(!_.isEmpty(finded))
+    if (!_.isEmpty(finded))
       return res.json({
-        code: 1
-      })
-  })
+        code: 1,
+      });
+  });
 
   Customer.create(req.body, (err, customer) => {
     if (err) throw err;
 
-    const token = customer.getJWT()
+    const token = customer.getJWT();
 
     return res.json({
       code: 0,
@@ -40,35 +40,35 @@ router.post("/", (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  if(!email || !password) {
+  if (!email || !password) {
     return res.json({
       code: 1,
-      data: "Талбаруудыг бүрэн бөглөнө үү"
-    })
+      data: "Талбаруудыг бүрэн бөглөнө үү",
+    });
   }
 
-  const customer = await Customer.findOne({email}).select('+password');
+  const customer = await Customer.findOne({ email }).select("+password");
 
-  if(!customer) {
+  if (!customer) {
     return res.json({
       code: 1,
-      data: "Нууц үг эсвэл имэйл хаяг буруу байна"
-    })
+      data: "Нууц үг эсвэл имэйл хаяг буруу байна",
+    });
   }
 
-  const checked = await customer.checkPassword(password)
+  const checked = await customer.checkPassword(password);
 
-  if(!checked)
+  if (!checked)
     return res.json({
       code: 1,
-      data: "Нууц үг эсвэл имэйл хаяг буруу байна"
-    })
+      data: "Нууц үг эсвэл имэйл хаяг буруу байна",
+    });
 
   return res.json({
     code: 0,
     customer,
-    token: customer.getJWT()
-  })
+    token: customer.getJWT(),
+  });
 });
 
 router.delete("/:customer_id", (req, res) => {
